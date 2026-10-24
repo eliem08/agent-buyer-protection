@@ -1,5 +1,7 @@
 # agent-buyer-protection
 
+[![CI](https://github.com/eliem08/agent-buyer-protection/actions/workflows/ci.yml/badge.svg)](https://github.com/eliem08/agent-buyer-protection/actions/workflows/ci.yml)
+
 > **PayPal Buyer Protection for agent purchases** — fixes it when your agent buys the wrong thing.
 
 You asked your agent for "size 10 black running shoes under $120". It bought
@@ -34,3 +36,25 @@ agent-buyer-protection demo
 - Signed mandates (AP2 / verifiable intent) checked at merchant checkout
 - Merchant network with instant-cancel APIs
 - Protection-fund underwriting (pairs with agent-insure and agent-fico)
+
+## Development
+
+Zero runtime dependencies; Python 3.10+.
+
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+python -m unittest discover -s tests -t .           # unit + CLI smoke tests
+ruff check . && ruff format --check .               # lint + format
+```
+
+```
+agent_buyer_protection/core.py       domain logic (pure, importable, fully tested)
+agent_buyer_protection/__main__.py   CLI (`agent-buyer-protection ...` / `python -m agent_buyer_protection ...`)
+tests/                unit tests + generated CLI smoke tests
+```
+
+CI runs lint and tests on Ubuntu and Windows across Python 3.10, 3.12 and 3.13.
+Design, data model, trade-offs and production path: **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+
+Part of the [agent-economy](https://github.com/eliem08/agent-economy) portfolio (idea #15).

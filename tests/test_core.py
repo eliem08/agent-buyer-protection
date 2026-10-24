@@ -3,8 +3,15 @@ from datetime import date
 
 from agent_buyer_protection import ClaimDesk, Mandate, Order, check, decide
 
-M = Mandate("shoes", keywords=["running"], attributes={"size": "10"}, max_unit_price=100, quantity=1,
-            merchant_allow=["a.com"], deliver_by=date(2026, 11, 1))
+M = Mandate(
+    "shoes",
+    keywords=["running"],
+    attributes={"size": "10"},
+    max_unit_price=100,
+    quantity=1,
+    merchant_allow=["a.com"],
+    deliver_by=date(2026, 11, 1),
+)
 
 
 class Tests(unittest.TestCase):

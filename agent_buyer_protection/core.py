@@ -1,4 +1,5 @@
 """Mandate checks for agent purchases and a claims workflow when they go wrong."""
+
 from __future__ import annotations
 
 import itertools
@@ -60,7 +61,13 @@ def check(m: Mandate, o: Order) -> list[Violation]:
         elif str(got).lower() != str(want).lower():
             v.append(Violation("attribute_mismatch", "high", f"{key}: wanted {want}, got {got}"))
     if o.quantity != m.quantity:
-        v.append(Violation("quantity", "high" if o.quantity > m.quantity else "medium", f"wanted {m.quantity}, ordering {o.quantity}"))
+        v.append(
+            Violation(
+                "quantity",
+                "high" if o.quantity > m.quantity else "medium",
+                f"wanted {m.quantity}, ordering {o.quantity}",
+            )
+        )
     if m.max_unit_price is not None and o.unit_price > m.max_unit_price:
         v.append(Violation("unit_price", "high", f"${o.unit_price:.2f} > cap ${m.max_unit_price:.2f}"))
     if m.max_total is not None and o.total > m.max_total:
@@ -95,7 +102,11 @@ class Case:
 
 FLOW = {
     "opened": {"contact_merchant": "merchant_contacted"},
-    "merchant_contacted": {"merchant_resolved": "resolved", "merchant_refused": "escalated", "no_response": "escalated"},
+    "merchant_contacted": {
+        "merchant_resolved": "resolved",
+        "merchant_refused": "escalated",
+        "no_response": "escalated",
+    },
     "escalated": {"pay": "paid"},
     "resolved": {},
     "paid": {},
