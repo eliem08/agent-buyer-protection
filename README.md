@@ -27,8 +27,11 @@ Every command is also a JSON API endpoint and a browser form, served by the buil
 
 ```bash
 agent-buyer-protection-web --port 8000          # then open http://127.0.0.1:8000
-docker build -t agent-buyer-protection . && docker run -p 8000:8000 -v agent-buyer-protection-data:/data agent-buyer-protection
+agent-buyer-protection-web keys create --label "first customer"   # prints an API key (stored hashed)
+docker build -t agent-buyer-protection . && docker run -p 8000:8000 -e API_KEYS=sk_... -v agent-buyer-protection-data:/data agent-buyer-protection
 ```
+
+Every API call needs `Authorization: Bearer <key>` once any key exists; a server on a public address refuses to start without one. Calls are rate-limited per key (60/min, `--rate`) and metered: `agent-buyer-protection-web usage` prints calls per key for billing.
 
 Endpoints: `POST /api/demo`, `POST /api/check`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
 Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
