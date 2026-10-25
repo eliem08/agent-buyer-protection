@@ -4,6 +4,7 @@ import os
 import sys
 from datetime import date
 
+from .commands import add_commands, run
 from .core import ClaimDesk, Mandate, Order, check, decide
 
 
@@ -43,11 +44,19 @@ def demo():
         print(f"   {ev} -> {case.state} (path {case.path})")
 
 
-def _run(argv=None):
+def build_parser():
     ap = argparse.ArgumentParser(prog="agent-buyer-protection")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("demo")
-    ap.parse_args(argv)
+    add_commands(sub)
+    return ap
+
+
+def _run(argv=None):
+    ap = build_parser()
+    a = ap.parse_args(argv)
+    if a.cmd != "demo":
+        return run(a)
     demo()
     return 0
 

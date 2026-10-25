@@ -17,8 +17,21 @@ Customers receive a release archive with the wheel and the examples. Python 3.10
 
 ```bash
 pip install agent_buyer_protection-0.1.0-py3-none-any.whl
+agent-buyer-protection check examples/order-check.json
 agent-buyer-protection demo
 ```
+
+## Web app and API
+
+Every command is also a JSON API endpoint and a browser form, served by the built-in web app.
+
+```bash
+agent-buyer-protection-web --port 8000          # then open http://127.0.0.1:8000
+docker build -t agent-buyer-protection . && docker run -p 8000:8000 -v agent-buyer-protection-data:/data agent-buyer-protection
+```
+
+Endpoints: `POST /api/demo`, `POST /api/check`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
+Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
 
 ## Pricing
 

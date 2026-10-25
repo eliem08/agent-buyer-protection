@@ -1,0 +1,15 @@
+[
+ {
+  "op": "check",
+  "payload": {
+   "request": {
+    "name": "order-check.json",
+    "content": "{\n  \"mandate\": {\n    \"description\": \"running shoes\",\n    \"keywords\": [\n      \"running\"\n    ],\n    \"attributes\": {\n      \"size\": \"10\"\n    },\n    \"max_unit_price\": 120,\n    \"quantity\": 1,\n    \"merchant_allow\": [\n      \"shoes.example\"\n    ]\n  },\n  \"order\": {\n    \"order_id\": \"A1\",\n    \"merchant\": \"shoes.example\",\n    \"title\": \"Trail running shoe\",\n    \"unit_price\": 149,\n    \"quantity\": 1,\n    \"attributes\": {\n      \"size\": \"10\"\n    },\n    \"shipping\": 0,\n    \"shipped\": false\n  }\n}\n"
+   }
+  }
+ },
+ {
+  "op": "demo",
+  "payload": {}
+ }
+]

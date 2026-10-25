@@ -23,6 +23,7 @@ dev = ["ruff>=0.6"]
 
 [project.scripts]
 agent-buyer-protection = "agent_buyer_protection.__main__:main"
+agent-buyer-protection-web = "agent_buyer_protection.web:main"
 
 [project.urls]
 Repository = "https://github.com/eliem08/agent-buyer-protection"

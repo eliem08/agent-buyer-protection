@@ -1,0 +1,28 @@
+{
+  "mandate": {
+    "description": "running shoes",
+    "keywords": [
+      "running"
+    ],
+    "attributes": {
+      "size": "10"
+    },
+    "max_unit_price": 120,
+    "quantity": 1,
+    "merchant_allow": [
+      "shoes.example"
+    ]
+  },
+  "order": {
+    "order_id": "A1",
+    "merchant": "shoes.example",
+    "title": "Trail running shoe",
+    "unit_price": 149,
+    "quantity": 1,
+    "attributes": {
+      "size": "10"
+    },
+    "shipping": 0,
+    "shipped": false
+  }
+}
