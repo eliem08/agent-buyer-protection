@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import itertools
+import math
 from dataclasses import dataclass, field
 from datetime import date
 
@@ -48,8 +49,18 @@ class Violation:
     detail: str
 
 
+def _merchant(name: str) -> str:
+    return " ".join(str(name).split()).casefold()
+
+
 def check(m: Mandate, o: Order) -> list[Violation]:
     v = []
+    numbers = {"unit_price": o.unit_price, "shipping": o.shipping, "quantity": o.quantity}
+    bad = {k: x for k, x in numbers.items() if not (isinstance(x, (int, float)) and math.isfinite(x) and x >= 0)}
+    if bad or o.quantity < 1:
+        # nan sails past every `>` cap and negatives shrink the total under it, so never trust them
+        v.append(Violation("invalid_order", "high", f"non-finite, negative or zero values: {bad or numbers}"))
+        return v
     title = o.title.lower()
     missing = [k for k in m.keywords if k.lower() not in title]
     if missing:
@@ -72,9 +83,9 @@ def check(m: Mandate, o: Order) -> list[Violation]:
         v.append(Violation("unit_price", "high", f"${o.unit_price:.2f} > cap ${m.max_unit_price:.2f}"))
     if m.max_total is not None and o.total > m.max_total:
         v.append(Violation("total", "high", f"total ${o.total:.2f} > cap ${m.max_total:.2f}"))
-    if m.merchant_deny and o.merchant in m.merchant_deny:
+    if m.merchant_deny and _merchant(o.merchant) in {_merchant(x) for x in m.merchant_deny}:
         v.append(Violation("merchant_denied", "high", o.merchant))
-    if m.merchant_allow and o.merchant not in m.merchant_allow:
+    if m.merchant_allow and _merchant(o.merchant) not in {_merchant(x) for x in m.merchant_allow}:
         v.append(Violation("merchant_unapproved", "medium", f"{o.merchant} not in allow list"))
     if m.deliver_by and o.eta and o.eta > m.deliver_by:
         v.append(Violation("late_delivery", "medium", f"eta {o.eta} after {m.deliver_by}"))
@@ -123,6 +134,8 @@ class ClaimDesk:
     @staticmethod
     def refund_amount(m: Mandate, o: Order, violations: list[Violation]) -> float:
         rules = {x.rule for x in violations}
+        if "invalid_order" in rules:
+            return 0.0  # nothing trustworthy to refund against; a human reviews it
         if rules & {"wrong_item", "attribute_mismatch", "merchant_denied"}:
             return round(o.total, 2)  # whole order is wrong
         refund = 0.0

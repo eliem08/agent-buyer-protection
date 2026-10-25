@@ -50,6 +50,21 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             desk.advance(c.case_id, "pay")
 
+    def test_nan_or_negative_numbers_are_blocked_not_allowed(self):
+        cap = Mandate("shoes", keywords=["running"], max_unit_price=100, max_total=120, quantity=1)
+        for kwargs in ({"unit_price": float("nan")}, {"shipping": -500}, {"unit_price": -10}, {"quantity": 0}):
+            args = {"unit_price": 90, "quantity": 1, "shipping": 0.0, **kwargs}
+            o = Order("1", "a.com", "Running shoe", args["unit_price"], args["quantity"], shipping=args["shipping"])
+            with self.subTest(kwargs=kwargs):
+                self.assertEqual(decide(check(cap, o)), "block")
+
+    def test_merchant_lists_ignore_case_and_spacing(self):
+        deny = Mandate("shoes", keywords=["running"], merchant_deny=["Scammy.shop"])
+        o = Order("1", "  scammy.SHOP ", "Running shoe", 90, 1)
+        self.assertEqual(decide(check(deny, o)), "block")
+        allow = Order("2", "A.com", "Running shoe", 90, 1, {"size": "10"}, eta=date(2026, 10, 30))
+        self.assertEqual(decide(check(M, allow)), "allow")
+
 
 if __name__ == "__main__":
     unittest.main()
