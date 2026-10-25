@@ -46,7 +46,7 @@ Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless
 | **Growth** | $399 per month | 250,000 checks a month; Custom rules; Refund reporting |
 | **Protection** | Custom (per-order fee, contact sales) | Backed buyer-protection program; Claims handling; SLA |
 
-To start a trial or buy a plan, email **sales@YOUR-DOMAIN.com**.
+To start a trial or buy a plan, [request access](https://github.com/eliem08/agent-buyer-protection/issues/new?title=Agent%20Buyer%20Protection%20trial&labels=sales).
 
 ## Licence
 
