@@ -5,16 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agent-buyer-protection"
 version = "0.1.0"
-description = "Buyer protection for agent purchases: fixes it when your agent buys the wrong thing"
+description = "Stop your agent buying the wrong thing, and get your money back when it does."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "Proprietary" }
 authors = [{ name = "eliem08" }]
 dependencies = []
 classifiers = [
   "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
+  "License :: Other/Proprietary License",
   "Operating System :: OS Independent",
+  "Private :: Do Not Upload",
 ]
 
 [project.optional-dependencies]

@@ -1,4 +1,4 @@
-"""Buyer protection for agent purchases: fixes it when your agent buys the wrong thing."""
+"""Agent Buyer Protection: Stop your agent buying the wrong thing, and get your money back when it does."""
 
 from .core import *
 

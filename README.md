@@ -1,16 +1,43 @@
-# agent-buyer-protection
+<!-- sell-kit:start -->
+# Agent Buyer Protection
 
 [![CI](https://github.com/eliem08/agent-buyer-protection/actions/workflows/ci.yml/badge.svg)](https://github.com/eliem08/agent-buyer-protection/actions/workflows/ci.yml)
 
-> **PayPal Buyer Protection for agent purchases** — fixes it when your agent buys the wrong thing.
+> **Stop your agent buying the wrong thing, and get your money back when it does.**
 
-You asked your agent for "size 10 black running shoes under $120". It bought
-three pairs of size 1 brown loafers for $340 from a sketchy store. Who catches
-that, and who unwinds it? `agent-buyer-protection` compares every agent
-purchase against the human's **mandate**, flags mismatches before money
-moves, and runs the claim when something slips through.
+**Who it's for:** Agentic-commerce apps and the consumers who let agents shop for them.
 
-## What the MVP does
+**The problem:** Shopping agents buy the wrong size, the wrong quantity or from the wrong store, and nobody is responsible for fixing it.
+
+**What you get:** Check every order against the buyer's mandate before checkout, then route claims to cancel, return, chargeback or protection fund with exact refund math.
+
+## Quickstart
+
+Customers receive a release archive with the wheel and the examples. Python 3.10+ and no other dependencies.
+
+```bash
+pip install agent_buyer_protection-0.1.0-py3-none-any.whl
+agent-buyer-protection demo
+```
+
+## Pricing
+
+Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless noted.
+
+| Plan | Price | Includes |
+|---|---|---|
+| **Developer** | $49 per month | 10,000 order checks a month; Mandate violations with severity; Claims desk |
+| **Growth** | $399 per month | 250,000 checks a month; Custom rules; Refund reporting |
+| **Protection** | Custom (per-order fee, contact sales) | Backed buyer-protection program; Claims handling; SLA |
+
+To start a trial or buy a plan, email **sales@YOUR-DOMAIN.com**.
+
+## Licence
+
+Proprietary. Copyright (c) 2026 eliem08. All rights reserved. Use requires a paid plan or an active trial; see [LICENSE](LICENSE).
+<!-- sell-kit:end -->
+
+## What it does
 
 - **Mandates**: what the human actually authorised — keywords, required
   attributes (size, colour…), max unit price, max total, quantity, merchant
@@ -35,7 +62,7 @@ agent-buyer-protection demo
 
 - Signed mandates (AP2 / verifiable intent) checked at merchant checkout
 - Merchant network with instant-cancel APIs
-- Protection-fund underwriting (pairs with agent-insure and agent-fico)
+- Protection-fund underwriting (pairs with agent-insure and agentrust)
 
 ## Development
 
