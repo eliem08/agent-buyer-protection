@@ -48,8 +48,9 @@
     <h2>Quickstart</h2>
     <p>Python 3.10+, no other dependencies. Your release archive includes the wheel and examples.</p>
     <pre><code>pip install agent_buyer_protection-0.1.0-py3-none-any.whl
-agent-buyer-protection check examples/order-check.json
-agent-buyer-protection demo</code></pre>
+agent-buyer-protection mandate-add shoes --description &quot;trail running shoes&quot; --keywords trail shoe --attr size=10 --max-total 130 --store protection.json
+agent-buyer-protection order-check shoes --order-id o1 --merchant RunCo --title &quot;Road Sandal&quot; --unit-price 900 --attr size=10 --store protection.json
+agent-buyer-protection claim-open o1 --shipped --not-returnable --not-card --store protection.json</code></pre>
   </section>
   <section>
     <h2>Pricing</h2>

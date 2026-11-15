@@ -6,6 +6,7 @@ from datetime import date
 
 from .commands import add_commands, run
 from .core import ClaimDesk, Mandate, Order, check, decide
+from .ops import OPS, add_ops, run_ops
 
 
 def demo():
@@ -49,12 +50,15 @@ def build_parser():
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("demo")
     add_commands(sub)
+    add_ops(sub)
     return ap
 
 
 def _run(argv=None):
     ap = build_parser()
     a = ap.parse_args(argv)
+    if a.cmd in OPS:
+        return run_ops(a)
     if a.cmd != "demo":
         return run(a)
     demo()

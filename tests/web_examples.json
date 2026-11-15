@@ -1,5 +1,60 @@
 [
  {
+  "op": "mandate-add",
+  "payload": {
+   "mandate_id": "shoes",
+   "description": "trail running shoes",
+   "keywords": [
+    "trail",
+    "shoe"
+   ],
+   "attr": [
+    "size=10"
+   ],
+   "max_total": 130.0,
+   "quantity": 1
+  }
+ },
+ {
+  "op": "order-check",
+  "payload": {
+   "mandate_id": "shoes",
+   "order_id": "o1",
+   "merchant": "RunCo",
+   "title": "Road Sandal",
+   "unit_price": 900.0,
+   "quantity": 1,
+   "shipping": 0.0,
+   "attr": [
+    "size=10"
+   ]
+  }
+ },
+ {
+  "op": "claim-open",
+  "payload": {
+   "order_id": "o1",
+   "shipped": true,
+   "not_returnable": true,
+   "not_card": true
+  }
+ },
+ {
+  "op": "claim-advance",
+  "payload": {
+   "case_id": "CASE-0001",
+   "event": "contact_merchant"
+  }
+ },
+ {
+  "op": "cases",
+  "payload": {}
+ },
+ {
+  "op": "mandates",
+  "payload": {}
+ },
+ {
   "op": "check",
   "payload": {
    "request": {

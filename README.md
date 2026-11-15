@@ -17,8 +17,9 @@ Customers receive a release archive with the wheel and the examples. Python 3.10
 
 ```bash
 pip install agent_buyer_protection-0.1.0-py3-none-any.whl
-agent-buyer-protection check examples/order-check.json
-agent-buyer-protection demo
+agent-buyer-protection mandate-add shoes --description "trail running shoes" --keywords trail shoe --attr size=10 --max-total 130 --store protection.json
+agent-buyer-protection order-check shoes --order-id o1 --merchant RunCo --title "Road Sandal" --unit-price 900 --attr size=10 --store protection.json
+agent-buyer-protection claim-open o1 --shipped --not-returnable --not-card --store protection.json
 ```
 
 ## Web app and API
@@ -33,7 +34,7 @@ docker build -t agent-buyer-protection . && docker run -p 8000:8000 -e API_KEYS=
 
 Every API call needs `Authorization: Bearer <key>` once any key exists; a server on a public address refuses to start without one. Calls are rate-limited per key (60/min, `--rate`) and metered: `agent-buyer-protection-web usage` prints calls per key for billing.
 
-Endpoints: `POST /api/demo`, `POST /api/check`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
+Endpoints: `POST /api/demo`, `POST /api/check`, `POST /api/mandate-add`, `POST /api/order-check`, `POST /api/claim-open`, `POST /api/claim-advance`, `POST /api/cases`, `POST /api/mandates`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
 Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
 
 ## Deploy and sell
