@@ -55,15 +55,18 @@ Buyers pick a plan on `/pricing`, pay on Stripe Checkout and see their API key o
 
 ## Pricing
 
-Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless noted.
+Monthly plans start with a 14-day free trial. Prices in USD, billed monthly unless noted.
 
 | Plan | Price | Includes |
 |---|---|---|
 | **Developer** | $49 per month | 10,000 order checks a month; Mandate violations with severity; Claims desk |
-| **Growth** | $399 per month | 250,000 checks a month; Custom rules; Refund reporting |
-| **Protection** | Custom (per-order fee, contact sales) | Backed buyer-protection program; Claims handling; SLA |
+| **Growth** | $399 per month | 250,000 checks a month; Stored purchase mandates; Case and refund reports |
+| **Protection** | Custom (per-order fee, contact sales) | Claims handling; SLA |
 
 To start a trial or buy a plan, [request access](https://github.com/eliem08/agent-buyer-protection/issues/new?title=Agent%20Buyer%20Protection%20trial&labels=sales).
+
+Plan note: every plan runs the same software, and every API key unlocks all of it. Seat, agent and volume
+limits are licence terms; the code does not enforce them. Support, SLA and done-for-you items are services.
 
 ## Licence
 
