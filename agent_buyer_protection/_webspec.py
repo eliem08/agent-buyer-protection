@@ -415,4 +415,24 @@ SPEC = {
             "id": "mandates",
         },
     ],
+    "plans": [
+        {
+            "key": "developer",
+            "name": "Developer",
+            "price": "$49 per month",
+            "features": ["10,000 order checks a month", "Mandate violations with severity", "Claims desk"],
+        },
+        {
+            "key": "growth",
+            "name": "Growth",
+            "price": "$399 per month",
+            "features": ["250,000 checks a month", "Stored purchase mandates", "Case and refund reports"],
+        },
+        {
+            "key": "protection",
+            "name": "Protection",
+            "price": "Per-order fee, contact sales",
+            "features": ["Claims handling", "SLA"],
+        },
+    ],
 }
