@@ -11,8 +11,9 @@ from dataclasses import asdict
 from datetime import date
 
 from .core import FLOW, Case, ClaimDesk, Mandate, Order, Violation, check, decide
+from .refunds import REASONS, stripe_refund
 
-OPS = ("mandate-add", "order-check", "claim-open", "claim-advance", "cases", "mandates")
+OPS = ("mandate-add", "order-check", "claim-open", "claim-advance", "refund", "cases", "mandates")
 EVENTS = sorted({e for nxt in FLOW.values() for e in nxt})
 
 
@@ -130,6 +131,10 @@ def add_ops(sub):
     p = sub.add_parser("claim-advance", help="move a case forward")
     p.add_argument("case_id")
     p.add_argument("event", choices=EVENTS)
+    p = sub.add_parser("refund", help="pay the case's refund through Stripe on the original payment")
+    p.add_argument("case_id")
+    p.add_argument("--payment-intent", required=True, help="the original Stripe payment: pi_... or ch_...")
+    p.add_argument("--reason", choices=REASONS, default="requested_by_customer")
     sub.add_parser("cases", help="every case, its path, state and refund")
     sub.add_parser("mandates", help="every mandate on file")
     for name in OPS:
@@ -191,6 +196,24 @@ def _run(st: State, a) -> int:
             raise DeskError(f"no case {a.case_id!r}")
         case = st.desk.advance(a.case_id, a.event)
         print(f"{case.case_id} is now {case.state} (path {case.path}, refund ${case.refund:,.2f})")
+    elif c == "refund":
+        if a.case_id not in st.desk.cases:
+            raise DeskError(f"no case {a.case_id!r}")
+        case = st.desk.cases[a.case_id]
+        if case.state == "opened":
+            raise DeskError(
+                f"{case.case_id}: contact the merchant first (claim-advance {case.case_id} contact_merchant)"
+            )
+        res = stripe_refund(case, a.payment_intent, a.reason)
+        case.history.append(("stripe_refund", f"{res['id']} {res.get('status', '?')}"))
+        if res.get("status") in ("succeeded", "pending"):
+            event = "pay" if case.state == "escalated" else "merchant_resolved"
+            st.desk.advance(case.case_id, event)
+        print(
+            f"{case.case_id}: Stripe refund {res['id']} for ${case.refund:,.2f} is {res.get('status')}; "
+            f"case is {case.state}"
+        )
+        return 0 if res.get("status") in ("succeeded", "pending") else 1
     elif c == "cases":
         for case in st.desk.cases.values():
             print(f"{case.case_id}  {case.state:<19}{case.path:<17}${case.refund:>9,.2f}  {case.order.title}")

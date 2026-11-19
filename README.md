@@ -9,7 +9,7 @@
 
 **The problem:** Shopping agents buy the wrong size, the wrong quantity or from the wrong store, and nobody is responsible for fixing it.
 
-**What you get:** Check every order against the buyer's mandate before checkout, then route claims to cancel, return, chargeback or protection fund with exact refund math.
+**What you get:** Check every order against the buyer's mandate before checkout, then route claims to cancel, return, chargeback or protection fund with exact refund math, and pay refunds through Stripe on the original payment.
 
 ## Quickstart
 
@@ -34,7 +34,7 @@ docker build -t agent-buyer-protection . && docker run -p 8000:8000 -e API_KEYS=
 
 Every API call needs `Authorization: Bearer <key>` once any key exists; a server on a public address refuses to start without one. Calls are rate-limited per key (60/min, `--rate`) and metered: `agent-buyer-protection-web usage` prints calls per key for billing.
 
-Endpoints: `POST /api/demo`, `POST /api/check`, `POST /api/mandate-add`, `POST /api/order-check`, `POST /api/claim-open`, `POST /api/claim-advance`, `POST /api/cases`, `POST /api/mandates`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
+Endpoints: `POST /api/demo`, `POST /api/check`, `POST /api/mandate-add`, `POST /api/order-check`, `POST /api/claim-open`, `POST /api/claim-advance`, `POST /api/refund`, `POST /api/cases`, `POST /api/mandates`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
 Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
 
 ## Deploy and sell
@@ -88,12 +88,22 @@ Proprietary. Copyright (c) 2026 eliem08. All rights reserved. Use requires a pai
   - refund amount including overspend-only refunds (wrong price, right item)
   - case state machine: `opened → merchant_contacted → resolved / escalated → paid`
 - Evidence bundle (mandate vs. order diff) attached to every claim
+- **Refunds paid through Stripe** by the business that took the payment:
+  - `refund CASE --payment-intent pi_...` refunds the case amount on the original payment and moves the case to
+    resolved, or to paid if it had been escalated.
+  - The Stripe idempotency key comes from the case and amount, so a retry after a timeout cannot refund twice. A
+    case that is already resolved or paid is refused before any call to Stripe.
+  - Set `REFUNDS_STRIPE_KEY` to that account's secret key. It is kept separate from `STRIPE_SECRET_KEY`, which
+    the hosted server uses to sell its own plans.
+  - Chargebacks and protection-fund payouts to the shopper are still handled outside the software.
+  - Tested against a stand-in for Stripe's Refunds API, not yet against a live account.
 
 ## Quickstart
 
 ```bash
 pip install -e .
 agent-buyer-protection demo
+REFUNDS_STRIPE_KEY=sk_live_... agent-buyer-protection refund CASE-0001 --payment-intent pi_3Ab...
 ```
 
 ## Roadmap
